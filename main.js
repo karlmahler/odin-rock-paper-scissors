@@ -1,25 +1,15 @@
 ( function () {
-	const CHOICES = [ 'Rock', 'Paper', 'Scissors' ];
-
-	function capitalizeString( str ) {
-		const firstChar = str[ 0 ].toUpperCase();
-		const restOfStr = str.slice( 1 ).toLowerCase();
-		const capitalizedStr = firstChar + restOfStr;
-
-		return capitalizedStr;
-	}
-
-	function getPlayerChoice() {
-		let choice;
-
-		while ( !CHOICES.includes( choice ) ) {
-			choice = capitalizeString( prompt( 'Enter your choice' ) ).trim();
-		}
-
-		return choice;
-	}
+	const gameStats = {
+		roundsPlayed: 0,
+		player: { score: 0 },
+		computer: { score: 0 }
+	};
+	const buttons = document
+		.querySelector( '.choices-wrapper' )
+		.querySelectorAll( 'button' );
 
 	function getComputerChoice() {
+		const CHOICES = [ 'rock', 'paper', 'scissors' ];
 		const randomIndex = Math.floor( Math.random() * CHOICES.length );
 		const randomChoice = CHOICES[ randomIndex ];
 
@@ -29,14 +19,14 @@
 	function playRound( playerSelection, computerSelection ) {
 		let roundOutcome;
 		const winningMoves = {
-			rock: 'Scissors',
-			paper: 'Rock',
-			scissors: 'Paper'
+			rock: 'scissors',
+			paper: 'rock',
+			scissors: 'paper'
 		};
 
 		if ( playerSelection === computerSelection ) {
 			roundOutcome = 'tie';
-		} else if ( winningMoves[ playerSelection.toLowerCase() ] === computerSelection ) {
+		} else if ( winningMoves[ playerSelection ] === computerSelection ) {
 			roundOutcome = 'player';
 		} else {
 			roundOutcome = 'computer';
@@ -45,59 +35,110 @@
 		return roundOutcome;
 	}
 
-	function displayRoundOutcome( roundOutcome, playerSelection, computerSelection ) {
+	function capitalizeString( str ) {
+		const firstChar = str[ 0 ].toUpperCase();
+		const restOfStr = str.slice( 1 ).toLowerCase();
+		const capitalizedStr = firstChar + restOfStr;
+
+		return capitalizedStr;
+	}
+
+	function displayRoundOutcome( roundOutcome, playerSelection, computerSelection, stats ) {
+		let roundOutcomeHeaderDisplay = document.querySelector( '.round-result-header' );
+		let roundOutcomeDisplay = document.querySelector( '.round-result' );
+
+		if ( !roundOutcomeHeaderDisplay && !roundOutcomeDisplay ) {
+			const container = document.querySelector( '.container' );
+
+			roundOutcomeHeaderDisplay = document.createElement( 'p' );
+			roundOutcomeDisplay = document.createElement( 'p' );
+
+			roundOutcomeHeaderDisplay.classList.add( 'round-result-header' );
+			roundOutcomeDisplay.classList.add( 'round-result' );
+
+			container.appendChild( roundOutcomeHeaderDisplay );
+			container.appendChild( roundOutcomeDisplay );
+		}
+
+		roundOutcomeHeaderDisplay.textContent = `Round ${stats.roundsPlayed}`;
+
 		if ( roundOutcome === 'player' ) {
-			console.log( `You Win! ${playerSelection} beats ${computerSelection}` );
+			roundOutcomeDisplay.textContent = 'You Win! ' +
+				`${capitalizeString( playerSelection )} beats ${computerSelection}`;
 		} else if ( roundOutcome === 'computer' ) {
-			console.log( `You Lose! ${computerSelection} beats ${playerSelection}` );
+			roundOutcomeDisplay.textContent = 'You Lose! ' +
+				`${capitalizeString( computerSelection )} beats ${playerSelection}`;
 		} else {
-			console.log( `It's a Tie! You both chose ${playerSelection}` );
+			roundOutcomeDisplay.textContent = `It's a Tie! You both chose ${playerSelection}`;
 		}
 	}
 
-	function displayResults( playerScore, computerScore ) {
-		// Horizontal '-' rule.
-		console.log( '-'.repeat( 50 ) );
+	function displayResetLink() {
+		const container = document.querySelector( '.container' );
+		const link = document.createElement( 'a' );
 
-		if ( playerScore > computerScore ) {
-			console.log( 'Player Wins!' );
-		} else if ( playerScore < computerScore ) {
-			console.log( 'Computer Wins!' );
+		link.setAttribute( 'href', '' );
+		link.classList.add( 'restart-link' );
+		link.textContent = 'Restart game';
+
+		container.appendChild( link );
+	}
+
+	function displayResult( stats ) {
+		const container = document.querySelector( '.container' );
+		const resultDisplay = document.createElement( 'p' );
+
+		resultDisplay.classList.add( 'game-result' );
+
+		if ( stats.player.score > stats.computer.score ) {
+			resultDisplay.textContent = 'Player Wins!';
+		} else if ( stats.player.score < stats.computer.score ) {
+			resultDisplay.textContent = 'Computer Wins!';
 		} else {
-			console.log( 'It\'s a Tie!' );
+			resultDisplay.textContent = 'It\'s a Tie!';
 		}
 
-		console.log( `Player: ${playerScore} - Computer: ${computerScore}` );
+		container.appendChild( resultDisplay );
+		displayResetLink();
 	}
 
-	function updateScores( roundOutcome, playerScore, computerScore ) {
-		if ( roundOutcome === 'player' ) {
-			playerScore++;
-		} else if ( roundOutcome === 'computer' ) {
-			computerScore++;
+	function updateScores( stats, roundOutcome ) {
+		stats.roundsPlayed++;
+
+		if ( roundOutcome !== 'tie' ) {
+			stats[ roundOutcome ].score++;
 		}
-
-		return { playerScore: playerScore, computerScore: computerScore };
 	}
 
-	function game() {
-		const numOfRounds = 5;
-		let playerScore = 0, computerScore = 0;
+	function displayScores( stats ) {
+		const playerScoreDisplay = document.getElementById( 'player-score' );
+		const computerScoreDisplay = document.getElementById( 'computer-score' );
 
-		for ( let i = 0; i < numOfRounds; i++ ) {
-			const playerSelection = getPlayerChoice();
-			const computerSelection = getComputerChoice();
-			const roundOutcome = playRound( playerSelection, computerSelection );
+		playerScoreDisplay.textContent = stats.player.score;
+		computerScoreDisplay.textContent = stats.computer.score;
+	}
 
-			( { playerScore, computerScore } = updateScores(
-				roundOutcome, playerScore, computerScore
-			) );
+	function game( playerSelection, stats ) {
+		const computerSelection = getComputerChoice();
+		const roundOutcome = playRound( playerSelection, computerSelection );
 
-			displayRoundOutcome( roundOutcome, playerSelection, computerSelection );
+		updateScores( stats, roundOutcome );
+
+		displayScores( stats );
+		displayRoundOutcome( roundOutcome, playerSelection, computerSelection, stats );
+
+		if ( stats.roundsPlayed === 5 ) {
+			buttons.forEach( button => {
+				button.disabled = true;
+			} );
+
+			displayResult( stats );
 		}
-
-		displayResults( playerScore, computerScore );
 	}
 
-	game();
+	buttons.forEach( button => {
+		button.addEventListener( 'click', () => {
+			game( button.value, gameStats );
+		} );
+	} );
 }() );

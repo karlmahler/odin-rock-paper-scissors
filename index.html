@@ -1,1 +1,41 @@
-<script type="text/javascript" src="main.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" >
+		<title>Rock Paper Scissors</title>
+		<link rel="stylesheet" href="styles.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+		<script src="main.js" defer></script>
+	</head>
+	<body>
+		<div class="container">
+			<h2>Rock Paper Scissors</h2>
+			<table class="scoreboard">
+				<thead>
+					<tr>
+						<th colspan="2">Scoreboard</th>
+					</tr>
+				</thead>
+					<tbody>
+					<tr>
+						<td id="player-score">0</td>
+						<td id="computer-score">0</td>
+					</tr>
+					<tr>
+						<td>You</td>
+						<td>Computer</td>
+					</tr>
+				</tbody>
+			</table>
+			<p class="text">Choose wisely!</p>
+			<div class="choices-wrapper">
+				<button value="rock">Rock</button>
+				<button value="paper">Paper</button>
+				<button value="scissors">Scissors</button>
+			</div>
+		</div>
+	</body>
+</html>

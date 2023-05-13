@@ -1,0 +1,98 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+}
+
+button {
+	flex: 1;
+	background: #415a77;
+	color: #fff;
+	font-size: 16px;
+	border: 1px solid #415a77;
+	border-radius: 6px;
+	padding: 12px 14px;
+	cursor: pointer;
+}
+
+button:hover,
+button:active,
+button:disabled {
+	background-color: initial;
+}
+
+button:hover,
+button:active,
+button:disabled,
+.restart-link:hover {
+	color: #415a77;
+}
+
+button:active {
+  opacity: 0.7;
+}
+
+h2,
+.game-result {
+	font-size: 229%;
+}
+
+.text,
+.scoreboard,
+.round-result-header,
+.game-result,
+.restart-link {
+	font-weight: bold;
+}
+
+.container,
+.choices-wrapper {
+	display: flex;
+}
+
+.container {
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	min-height: 100vh;
+	background: linear-gradient(135deg, #fff 70%, #0d1b2a 20%);
+}
+
+.container > * {
+	min-width: 20%;
+}
+
+.scoreboard {
+	border: 3px solid #0d1b2a;
+	border-radius: 20px;
+}
+
+.scoreboard th {
+	border-bottom: 2px solid #0d1b2a;
+}
+
+.scoreboard td {
+	min-width: 75px;
+}
+
+.scoreboard th,
+.round-result {
+	font-size: 129%;
+}
+
+.choices-wrapper {
+	gap: 5px;
+}
+
+.round-result-header {
+	border-bottom: 1px solid #1b263b;
+	margin-bottom: 0;
+}
+
+.restart-link {
+	color: #1b263b;
+	text-decoration: none;
+}
+
+.restart-link:active {
+	color: #0d1b2a;
+}
